@@ -20,7 +20,7 @@ namespace NoPanic
         public frmPrincipale() {
             InitializeComponent();
             lblDescription.Text = "Programme d'alerte en cas d'agresssion";
-            lblVersion.Text = "NoPanic - Version 1.1 - SIDSIC 54";
+            lblVersion.Text = "NoPanic - Version 1.2 - SIDSIC 54";
             lblEtat.Text = "Etat de fonctionnement : OK";
             RegisterHotKey(Handle, 42512, Alerte_Touche, (int)Keys.F12);
             switch (Alerte_Touche) {
@@ -50,7 +50,7 @@ namespace NoPanic
                     break;
             }
             if (Properties.Settings.Default.TestPresence_Frequence != 0) {
-                tmrEtat.Interval = Properties.Settings.Default.TestPresence_Frequence * 30000;
+                tmrEtat.Interval = 30000;
                 tmrEtat_Tick(null, null);
                 tmrEtat.Enabled = true;
             }
@@ -91,7 +91,7 @@ namespace NoPanic
                 }
                 Alerte_Message = Alerte_Message.Replace("%LOGIN%", Environment.UserName);
                 foreach (string IP in Properties.Settings.Default.Alerte_IP.Split(',')) {
-                    udp_alerte.Envoyer(IP, Alerte_Message, Properties.Settings.Default.Port_Alerte);
+                    udp_alerte.Envoyer(IP, "Alerte|" + Alerte_Message, Properties.Settings.Default.Port_Alerte);
                 }
             }
             base.WndProc(ref m);

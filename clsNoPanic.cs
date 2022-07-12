@@ -15,16 +15,17 @@ namespace NoPanic
         
         private static int Port_Alerte = Properties.Settings.Default.Port_Alerte;
         private static int Port_Presence = Properties.Settings.Default.Port_Presence;
-        private int nbrTest = 0;
+        private int nbrTest = 1;
         private string mIP;
         private UdpClient udp_alerte;
         private UdpClient udp_presence;
         private IAsyncResult ar_alerte = null;
         private IAsyncResult ar_presence = null;
+        private System.Timers.Timer tTestPresence = new System.Timers.Timer();
 
         public clsNoPanic() {
-            System.Timers.Timer tTestPresence = new System.Timers.Timer();
             tTestPresence.Elapsed += new ElapsedEventHandler(Envoyer_Presence);
+
             try {
                 udp_alerte = new UdpClient(Port_Alerte);
                 udp_alerte.Client.ReceiveBufferSize = 4096;
@@ -56,7 +57,7 @@ namespace NoPanic
             IPEndPoint ip = new IPEndPoint(IPAddress.Any, Port_Alerte);
             byte[] bytes = udp_alerte.EndReceive(ar_alerte, ref ip);
             string message = Encoding.ASCII.GetString(bytes);
-            if (message.StartsWith("NoPanic|") && (mIP != ip.Address.ToString())) { message = message.Split('|')[1]; } else { Ecouter_Alerte(); return; }
+            if (message.StartsWith("NoPanic|Alerte|") && (mIP != ip.Address.ToString())) { message = message.Split('|')[2]; } else { Ecouter_Alerte(); return; }
             switch (message) {
                 case "CONFIRMATION":
                     if (Properties.Settings.Default.Alerte_Confirmation != "") {
@@ -71,7 +72,7 @@ namespace NoPanic
                     }
                     break;
                 default:
-                    Envoyer(ip.Address.ToString(), "CONFIRMATION", Port_Alerte);
+                    Envoyer(ip.Address.ToString(), "Alerte|CONFIRMATION", Port_Alerte);
                     try {
                         if (Properties.Settings.Default.Alerte_Son) {
                             SoundPlayer player = new SoundPlayer(Properties.Resources.Alerte);
@@ -89,31 +90,36 @@ namespace NoPanic
             IPEndPoint ip = new IPEndPoint(IPAddress.Any, Port_Presence);
             byte[] bytes = udp_presence.EndReceive(ar_presence, ref ip);
             string message = Encoding.ASCII.GetString(bytes);
-            if (message.StartsWith("NoPanic|") && (mIP != ip.Address.ToString())) { message = message.Split('|')[1]; } else { Ecouter_Presence(); return; }
+            if (message.StartsWith("NoPanic|Presence|") && (mIP != ip.Address.ToString())) { message = message.Split('|')[2]; } else { Ecouter_Presence(); return; }
             switch (message) {
                 case "PRESENCE":
-                    Envoyer(ip.Address.ToString(), "PRESENT", Port_Presence);
+                    Envoyer(ip.Address.ToString(), "Presence|PRESENT", Port_Presence);
                     break;
                 case "PRESENT":
-                    nbrTest = 0; Etat = true;
+                    tTestPresence.Interval = Properties.Settings.Default.TestPresence_Frequence * 60000;
+                    nbrTest = 0;
+                    Etat = true;
                     break;
                 case "CONFIGURER":
-                    Envoyer(ip.Address.ToString(), "CONFIGURATION|" + Environment.MachineName + "|" + System.Reflection.Assembly.GetEntryAssembly().Location + "|" + ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath + "|" + Environment.UserName, Port_Presence);
+                    Envoyer(ip.Address.ToString(), "Presence|CONFIGURATION|" + Environment.MachineName + "|" + System.Reflection.Assembly.GetEntryAssembly().Location + "|" + ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath + "|" + Environment.UserName, Port_Presence);
                     break;
             }
             Ecouter_Presence();
         }
         private void Envoyer_Presence(object source, ElapsedEventArgs e) {
             nbrTest = nbrTest + 1;
-            if (nbrTest == 2) { Etat = false; }
+            if (nbrTest >= 2) { 
+                Etat = false;
+                tTestPresence.Interval = 30000;
+            }
             foreach (string IP in Properties.Settings.Default.TestPresence_IP.Split(',')) {
-                Envoyer(IP, "PRESENCE", Port_Presence);
+                Envoyer(IP, "Presence|PRESENCE", Port_Presence);
             }
         }
 
         public void Envoyer(string sIP, string sMessage, int Port) {
             try {
-                UdpClient client = new UdpClient();
+                UdpClient client = new UdpClient(Port);
                 IPEndPoint ip = null;
                 if (sIP.Contains(".")) {
                     ip = new IPEndPoint(IPAddress.Parse(sIP), Port);

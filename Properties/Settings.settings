@@ -2,10 +2,10 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="NoPanic.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-	<Setting Name="Veille_Desactive" Type="System.Boolean" Scope="User">
+    <Setting Name="Veille_Desactive" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-	<Setting Name="Port_Alerte" Type="System.Int32" Scope="User">
+    <Setting Name="Port_Alerte" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">15000</Value>
     </Setting>
     <Setting Name="Port_Presence" Type="System.Int32" Scope="User">

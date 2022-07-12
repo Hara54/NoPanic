@@ -10,7 +10,6 @@ K:\Mes Documents\1 - DEVELOPPEMENT\PROJET NoPanic\NoPanic\obj\Debug\NoPanic.pdb
 C:\Users\Utilisateur\source\repos\Hara54\NoPanic\bin\Debug\NoPanic.exe.config
 C:\Users\Utilisateur\source\repos\Hara54\NoPanic\bin\Debug\NoPanic.exe
 C:\Users\Utilisateur\source\repos\Hara54\NoPanic\bin\Debug\NoPanic.pdb
-C:\Users\Utilisateur\source\repos\Hara54\NoPanic\obj\Debug\NoPanic.csprojAssemblyReference.cache
 C:\Users\Utilisateur\source\repos\Hara54\NoPanic\obj\Debug\NoPanic.frmAlerte.resources
 C:\Users\Utilisateur\source\repos\Hara54\NoPanic\obj\Debug\NoPanic.frmPrincipale.resources
 C:\Users\Utilisateur\source\repos\Hara54\NoPanic\obj\Debug\NoPanic.Properties.Resources.resources
@@ -18,3 +17,4 @@ C:\Users\Utilisateur\source\repos\Hara54\NoPanic\obj\Debug\NoPanic.csproj.Genera
 C:\Users\Utilisateur\source\repos\Hara54\NoPanic\obj\Debug\NoPanic.csproj.CoreCompileInputs.cache
 C:\Users\Utilisateur\source\repos\Hara54\NoPanic\obj\Debug\NoPanic.exe
 C:\Users\Utilisateur\source\repos\Hara54\NoPanic\obj\Debug\NoPanic.pdb
+C:\Users\Utilisateur\source\repos\Hara54\NoPanic\obj\Debug\NoPanic.csprojAssemblyReference.cache
