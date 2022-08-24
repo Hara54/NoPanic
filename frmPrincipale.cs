@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
-using System.DirectoryServices.AccountManagement;
 using System.Windows.Forms;
 
 namespace NoPanic
@@ -13,47 +13,46 @@ namespace NoPanic
         [DllImport("user32.dll")]
         public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
-        private static int Alerte_Touche = Properties.Settings.Default.Alerte_Touche;
-        private bool nbrEtat = false;
-        private clsNoPanic udp_alerte = new clsNoPanic();
+        private static readonly int Alerte_Touche = Properties.Settings.Default.Alerte_Touche;
+        private readonly ClsNoPanic udp_alerte = new ClsNoPanic();
 
         public frmPrincipale() {
             InitializeComponent();
-            lblDescription.Text = "Programme d'alerte en cas d'agresssion";
-            lblVersion.Text = "NoPanic - Version 1.2 - SIDSIC 54";
-            lblEtat.Text = "Etat de fonctionnement : OK";
+            lblDescription.Text = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
+            lblVersion.Text = Assembly.GetExecutingAssembly().GetName().Name +  " - Version " + Assembly.GetExecutingAssembly().GetName().Version;
+            udp_alerte.Etat_Change += Etat_Update;
+            udp_alerte.Etat = true;
+
+            string Key = "";
             RegisterHotKey(Handle, 42512, Alerte_Touche, (int)Keys.F12);
             switch (Alerte_Touche) {
                 case 1:
-                    tiNoPanic.Text = "NoPanic - ALT+F12";
+                    Key = "ALT+F12";
                     break;
                 case 2:
-                    tiNoPanic.Text = "NoPanic - CTRL+F12";
+                    Key = "CTRL+F12";
                     break;
                 case 3:
-                    tiNoPanic.Text = "NoPanic - CTRL+ALT+F12";
+                    Key = "CTRL+ALT+F12";
                     break;
                 case 4:
-                    tiNoPanic.Text = "NoPanic - SHIFT+F12";
+                    Key = "SHIFT+F12";
                     break;
                 case 5:
-                    tiNoPanic.Text = "NoPanic - SHIFT+ALT+F12";
+                    Key = "SHIFT+ALT+F12";
                     break;
                 case 6:
-                    tiNoPanic.Text = "NoPanic - CTRL+SHIFT+F12";
+                    Key = "CTRL+SHIFT+F12";
                     break;
                 case 7:
-                    tiNoPanic.Text = "NoPanic - CTRL+ALT+SHIFT+F12";
+                    Key = "CTRL+ALT+SHIFT+F12";
                     break;
                 default:
-                    tiNoPanic.Text = "NoPanic";
+                    Key = "INCONNUE";
                     break;
             }
-            if (Properties.Settings.Default.TestPresence_Frequence != 0) {
-                tmrEtat.Interval = 30000;
-                tmrEtat_Tick(null, null);
-                tmrEtat.Enabled = true;
-            }
+            lblKey.Text = Key;
+            tiNoPanic.Text = Assembly.GetExecutingAssembly().GetName().Name + " - " + Key;
         }
         private void tiNoPanic_Click(object sender, MouseEventArgs e) {
             btnFermer.Focus();
@@ -80,33 +79,20 @@ namespace NoPanic
             }
         }
         protected override void WndProc(ref Message m) {
-            if (m.Msg == 0x0312 && m.WParam.ToInt32() == 42512) {
-                string Alerte_Message = Properties.Settings.Default.Alerte_Message;
-
-                try {
-                    UserPrincipal userPrincipal = UserPrincipal.Current;
-                    Alerte_Message = Alerte_Message.Replace("%NOM%", userPrincipal.DisplayName);
-                } catch {
-                    Alerte_Message = Alerte_Message.Replace("%NOM%", Environment.UserName);
-                }
-                Alerte_Message = Alerte_Message.Replace("%LOGIN%", Environment.UserName);
-                foreach (string IP in Properties.Settings.Default.Alerte_IP.Split(',')) {
-                    udp_alerte.Envoyer(IP, "Alerte|" + Alerte_Message, Properties.Settings.Default.Port_Alerte);
-                }
-            }
+            if (m.Msg == 0x0312 && m.WParam.ToInt32() == 42512) { udp_alerte.Envoyer_Alerte(); }
             base.WndProc(ref m);
         }
-        private void tmrEtat_Tick(object sender, EventArgs e) {
+        private void Etat_Update() {
             if (udp_alerte.Etat == true) {
-                nbrEtat = false;
                 tiNoPanic.Icon = Properties.Resources.Etat_OK;
-                lblEtat.Text = "Etat de fonctionnement : OK";
+                lblEtat.Text = "OK";
+                lblEtat.ForeColor = System.Drawing.Color.DarkGreen;
             } else {
                 tiNoPanic.Icon = Properties.Resources.Etat_NOK;
-                lblEtat.Text = "Etat de fonctionnement : ERREUR";
-                if ((nbrEtat == false) && (Properties.Settings.Default.Erreur_Message != "")) { 
+                lblEtat.Text = "ERREUR";
+                lblEtat.ForeColor = System.Drawing.Color.DarkRed;
+                if (Properties.Settings.Default.Erreur_Message != "") { 
                     tiNoPanic.ShowBalloonTip(700, "Avertissement", Properties.Settings.Default.Erreur_Message, ToolTipIcon.Warning);
-                    nbrEtat = true;
                 }
             }
         }

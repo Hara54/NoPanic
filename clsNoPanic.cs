@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.DirectoryServices.AccountManagement;
 using System.Media;
 using System.Net;
 using System.Net.Sockets;
@@ -9,70 +10,84 @@ using System.Windows.Forms;
 
 namespace NoPanic
 {
-    class clsNoPanic
+    class ClsNoPanic
     {
-        public bool Etat = true;
-        
-        private static int Port_Alerte = Properties.Settings.Default.Port_Alerte;
-        private static int Port_Presence = Properties.Settings.Default.Port_Presence;
-        private int nbrTest = 1;
-        private string mIP;
-        private UdpClient udp_alerte;
-        private UdpClient udp_presence;
-        private IAsyncResult ar_alerte = null;
-        private IAsyncResult ar_presence = null;
-        private System.Timers.Timer tTestPresence = new System.Timers.Timer();
+        private long Present = 0;
+        private readonly string mIP;
+        private readonly UdpClient u;
+        private static readonly int Port_Ecoute = Properties.Settings.Default.Port_Ecoute;
+        private static readonly int Port_Envoi = Properties.Settings.Default.Port_Envoi;
+        private readonly System.Timers.Timer tTestPresence = new System.Timers.Timer();
 
-        public clsNoPanic() {
+        public delegate void Etat_Change_Event();
+        public event Etat_Change_Event Etat_Change;
+        private bool _Etat;
+        public bool Etat
+        {
+            get { return _Etat; }
+            set {
+                if (_Etat == value) { return; }
+                _Etat = value;
+                Etat_Change?.Invoke();
+            }
+        }
+
+        public ClsNoPanic()
+        {
             tTestPresence.Elapsed += new ElapsedEventHandler(Envoyer_Presence);
 
             try {
-                udp_alerte = new UdpClient(Port_Alerte);
-                udp_alerte.Client.ReceiveBufferSize = 4096;
-                udp_alerte.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-                udp_presence = new UdpClient(Port_Presence);
-                udp_presence.Client.ReceiveBufferSize = 4096;
-                udp_presence.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                u = new UdpClient(Port_Ecoute);
+                u.Client.ReceiveBufferSize = 4096;
+                u.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
                 var host = Dns.GetHostEntry(Dns.GetHostName());
                 foreach (var ip in host.AddressList) { if (ip.AddressFamily == AddressFamily.InterNetwork) { mIP = ip.ToString(); break; } }
             } catch { Etat = false; }
 
-            Ecouter_Alerte();
-            Ecouter_Presence();
-
+            Ecouter();
+            
             if (Properties.Settings.Default.TestPresence_Frequence != 0) {
-                tTestPresence.Interval = Properties.Settings.Default.TestPresence_Frequence * 60000;
+                tTestPresence.Interval = Properties.Settings.Default.TestPresence_Frequence * 1000 / 2;
                 Envoyer_Presence(null, null);
                 tTestPresence.Enabled = true;
             }
+        } 
+        
+        private void Ecouter() {
+            try { IAsyncResult u_ar = u.BeginReceive(Recevoir, new object()); } catch { Etat = false; }
         }
-
-        private void Ecouter_Alerte() {
-            try { ar_alerte = udp_alerte.BeginReceive(Recevoir_Alerte, new object()); } catch { Etat = false; }
-        }
-        private void Ecouter_Presence() {
-            try { ar_presence = udp_presence.BeginReceive(Recevoir_Presence, new object()); } catch { Etat = false; }
-        }
-        private void Recevoir_Alerte(IAsyncResult ar_alerte) {
-            IPEndPoint ip = new IPEndPoint(IPAddress.Any, Port_Alerte);
-            byte[] bytes = udp_alerte.EndReceive(ar_alerte, ref ip);
+        private void Recevoir(IAsyncResult u_ar) {
+            IPEndPoint ip = new IPEndPoint(IPAddress.Any, Port_Ecoute);
+            byte[] bytes = u.EndReceive(u_ar, ref ip);
             string message = Encoding.ASCII.GetString(bytes);
-            if (message.StartsWith("NoPanic|Alerte|") && (mIP != ip.Address.ToString())) { message = message.Split('|')[2]; } else { Ecouter_Alerte(); return; }
+            
+            if (message.StartsWith("NoPanic|") && (mIP != ip.Address.ToString())) { message = message.Split('|')[1]; } else { Ecouter(); return; }
             switch (message) {
-                case "CONFIRMATION":
+                case "ALERTE":
                     if (Properties.Settings.Default.Alerte_Confirmation != "") {
                         bool frmExist = false;
                         FormCollection fc = Application.OpenForms;
                         foreach (Form frm in fc) { if (frm.Text == "Alerte") { frmExist = true; break; } }
                         if (frmExist == false) {
                             frmAlerte fAlert1 = new frmAlerte(Properties.Settings.Default.Alerte_Confirmation);
-                            Ecouter_Alerte();
                             fAlert1.ShowDialog();
-                        } else { Ecouter_Alerte(); }
+                        }
                     }
                     break;
+                case "PRESENT":
+                    Etat = true;
+                    Present = 0;
+                    break;
+                case "PRESENCE":
+                    Envoyer(ip.Address.ToString(), "PRESENT");
+                    Etat = true;
+                    Present = 0;
+                    break;
+                case "CONFIGURER":
+                    Envoyer(ip.Address.ToString(), "CONFIGURATION|" + Environment.MachineName + "|" + System.Reflection.Assembly.GetEntryAssembly().Location + "|" + ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath + "|" + Environment.UserName);
+                    break;
                 default:
-                    Envoyer(ip.Address.ToString(), "Alerte|CONFIRMATION", Port_Alerte);
+                    Envoyer(ip.Address.ToString(), "ALERTE");
                     try {
                         if (Properties.Settings.Default.Alerte_Son) {
                             SoundPlayer player = new SoundPlayer(Properties.Resources.Alerte);
@@ -81,59 +96,56 @@ namespace NoPanic
                         }
                     } catch { }
                     frmAlerte fAlert2 = new frmAlerte(message);
-                    Ecouter_Alerte();
                     fAlert2.ShowDialog();
                     break;
             }
+            Ecouter();
         }
-        private void Recevoir_Presence(IAsyncResult ar_presence) {
-            IPEndPoint ip = new IPEndPoint(IPAddress.Any, Port_Presence);
-            byte[] bytes = udp_presence.EndReceive(ar_presence, ref ip);
-            string message = Encoding.ASCII.GetString(bytes);
-            if (message.StartsWith("NoPanic|Presence|") && (mIP != ip.Address.ToString())) { message = message.Split('|')[2]; } else { Ecouter_Presence(); return; }
-            switch (message) {
-                case "PRESENCE":
-                    Envoyer(ip.Address.ToString(), "Presence|PRESENT", Port_Presence);
-                    break;
-                case "PRESENT":
-                    tTestPresence.Interval = Properties.Settings.Default.TestPresence_Frequence * 60000;
-                    nbrTest = 0;
-                    Etat = true;
-                    break;
-                case "CONFIGURER":
-                    Envoyer(ip.Address.ToString(), "Presence|CONFIGURATION|" + Environment.MachineName + "|" + System.Reflection.Assembly.GetEntryAssembly().Location + "|" + ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath + "|" + Environment.UserName, Port_Presence);
-                    break;
-            }
-            Ecouter_Presence();
-        }
-        private void Envoyer_Presence(object source, ElapsedEventArgs e) {
-            nbrTest = nbrTest + 1;
-            if (nbrTest >= 2) { 
-                Etat = false;
-                tTestPresence.Interval = 30000;
-            }
-            foreach (string IP in Properties.Settings.Default.TestPresence_IP.Split(',')) {
-                Envoyer(IP, "Presence|PRESENCE", Port_Presence);
-            }
-        }
-
-        public void Envoyer(string sIP, string sMessage, int Port) {
+        private void Envoyer(string sIP, string sMessage) {
             try {
-                UdpClient client = new UdpClient(Port);
+                UdpClient client = new UdpClient(Port_Envoi);
                 IPEndPoint ip = null;
                 if (sIP.Contains(".")) {
-                    ip = new IPEndPoint(IPAddress.Parse(sIP), Port);
+                    ip = new IPEndPoint(IPAddress.Parse(sIP), Port_Ecoute); 
                 } else {
-                    ip = new IPEndPoint(Dns.GetHostAddresses(sIP)[0], Port);
+                    ip = new IPEndPoint(Dns.GetHostAddresses(sIP)[0], Port_Ecoute);
                 }
                 byte[] bytes = Encoding.ASCII.GetBytes("NoPanic|" + sMessage);
                 client.Send(bytes, bytes.Length, ip);
                 client.Close();
-            } catch { Etat = false; }
+            }
+            catch { Etat = false; }
+        }
+        
+        private void Envoyer_Presence(object source, ElapsedEventArgs e) {
+            Present += 1;
+            if (Present >= 2) {
+                foreach (string IP in Properties.Settings.Default.TestPresence_IP.Split(',')) {
+                    Envoyer(IP, "PRESENCE");
+                }
+            }
+            if (Present >= 3) { Etat = false; }
+        }
+        public void Envoyer_Alerte() {
+            string Alerte_Message = Properties.Settings.Default.Alerte_Message;
+            
+            try {
+                UserPrincipal userPrincipal = UserPrincipal.Current;
+                if (userPrincipal.DisplayName.Trim() == "") {
+                    Alerte_Message = Alerte_Message.Replace("%NOM%", Environment.UserName);
+                } else {
+                    Alerte_Message = Alerte_Message.Replace("%NOM%", userPrincipal.DisplayName);
+                }
+            }
+            catch { Alerte_Message = Alerte_Message.Replace("%NOM%", Environment.UserName); }
+
+            Alerte_Message = Alerte_Message.Replace("%LOGIN%", Environment.UserName);
+            
+            foreach (string IP in Properties.Settings.Default.Alerte_IP.Split(',')) {
+                Envoyer(IP, Alerte_Message);
+            }
         }
 
-        ~clsNoPanic() {
-            try { udp_alerte.Close(); udp_presence.Close(); } catch { }
-        }
+        ~ClsNoPanic() { try { u.Close(); } catch { } }
     }
 }

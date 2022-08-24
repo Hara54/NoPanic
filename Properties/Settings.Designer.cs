@@ -37,31 +37,7 @@ namespace NoPanic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("15000")]
-        public int Port_Alerte {
-            get {
-                return ((int)(this["Port_Alerte"]));
-            }
-            set {
-                this["Port_Alerte"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("15001")]
-        public int Port_Presence {
-            get {
-                return ((int)(this["Port_Presence"]));
-            }
-            set {
-                this["Port_Presence"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
         public int TestPresence_Frequence {
             get {
                 return ((int)(this["TestPresence_Frequence"]));
@@ -189,6 +165,30 @@ namespace NoPanic.Properties {
             }
             set {
                 this["Quitter_Message"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15000")]
+        public int Port_Ecoute {
+            get {
+                return ((int)(this["Port_Ecoute"]));
+            }
+            set {
+                this["Port_Ecoute"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15001")]
+        public int Port_Envoi {
+            get {
+                return ((int)(this["Port_Envoi"]));
+            }
+            set {
+                this["Port_Envoi"] = value;
             }
         }
     }

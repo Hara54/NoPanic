@@ -48,7 +48,7 @@ namespace NoPanic
                 if (Config == true) {
                     var appSettings = Properties.Settings.Default;
                     try {
-                        if (!File.Exists(ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath)) { Properties.Settings.Default.Port_Alerte = 15000; Properties.Settings.Default.Save(); }
+                        if (!File.Exists(ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath)) { Properties.Settings.Default.Alerte_Touche = 2; Properties.Settings.Default.Save(); }
                         Configuration configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
                         string appSettingsXmlName = appSettings.Context["GroupName"].ToString();
                         XDocument import = XDocument.Load(configuration.FilePath);
