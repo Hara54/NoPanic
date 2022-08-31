@@ -126,9 +126,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="NoPanic.ico" />
-    <None Include="Resources\Alerte.wav" />
     <None Include="Resources\Etat_NOK.ico" />
+    <None Include="Resources\Etat_INACTIF.ico" />
     <None Include="Resources\Etat_OK.ico" />
+    <None Include="Resources\Alerte.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

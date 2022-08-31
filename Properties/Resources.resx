@@ -121,6 +121,9 @@
   <data name="Alerte" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Alerte.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="Etat_INACTIF" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Etat_INACTIF.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Etat_NOK" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Etat_NOK.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

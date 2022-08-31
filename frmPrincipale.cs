@@ -18,10 +18,10 @@ namespace NoPanic
 
         public frmPrincipale() {
             InitializeComponent();
+            this.Text = Assembly.GetExecutingAssembly().GetName().Name + " - Version " + Assembly.GetExecutingAssembly().GetName().Version;
             lblDescription.Text = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
-            lblVersion.Text = Assembly.GetExecutingAssembly().GetName().Name +  " - Version " + Assembly.GetExecutingAssembly().GetName().Version;
             udp_alerte.Etat_Change += Etat_Update;
-            udp_alerte.Etat = true;
+            Etat_Update();
 
             string Key = "";
             RegisterHotKey(Handle, 42512, Alerte_Touche, (int)Keys.F12);
@@ -54,14 +54,14 @@ namespace NoPanic
             lblKey.Text = Key;
             tiNoPanic.Text = Assembly.GetExecutingAssembly().GetName().Name + " - " + Key;
         }
-        private void tiNoPanic_Click(object sender, MouseEventArgs e) {
+        private void TiNoPanic_Click(object sender, MouseEventArgs e) {
             btnFermer.Focus();
             Show();
         }
-        private void btnFermer_Click(object sender, EventArgs e) {
+        private void BtnFermer_Click(object sender, EventArgs e) {
             Hide();
         }
-        private void btnQuitter_Click(object sender, EventArgs e) {
+        private void BtnQuitter_Click(object sender, EventArgs e) {
             if (Properties.Settings.Default.Quitter_Message == "") {
                 UnregisterHotKey(Handle, 42512);
                 Application.Exit();
@@ -72,7 +72,7 @@ namespace NoPanic
                 Application.Exit();
             }
         }
-        private void frmPrincipale_FormClosing(object sender, FormClosingEventArgs e) {
+        private void FrmPrincipale_FormClosing(object sender, FormClosingEventArgs e) {
             if (e.CloseReason == CloseReason.UserClosing) {
                 e.Cancel = true;
                 Hide();
@@ -83,17 +83,23 @@ namespace NoPanic
             base.WndProc(ref m);
         }
         private void Etat_Update() {
-            if (udp_alerte.Etat == true) {
-                tiNoPanic.Icon = Properties.Resources.Etat_OK;
-                lblEtat.Text = "OK";
-                lblEtat.ForeColor = System.Drawing.Color.DarkGreen;
-            } else {
+            if (udp_alerte.Etat == 0) {
                 tiNoPanic.Icon = Properties.Resources.Etat_NOK;
                 lblEtat.Text = "ERREUR";
                 lblEtat.ForeColor = System.Drawing.Color.DarkRed;
                 if (Properties.Settings.Default.Erreur_Message != "") { 
                     tiNoPanic.ShowBalloonTip(700, "Avertissement", Properties.Settings.Default.Erreur_Message, ToolTipIcon.Warning);
                 }
+            }
+            if (udp_alerte.Etat == 1) {
+                tiNoPanic.Icon = Properties.Resources.Etat_INACTIF;
+                lblEtat.Text = "INACTIF";
+                lblEtat.ForeColor = System.Drawing.Color.DarkKhaki;
+            }
+            if (udp_alerte.Etat == 2) {
+                tiNoPanic.Icon = Properties.Resources.Etat_OK;
+                lblEtat.Text = "OK";
+                lblEtat.ForeColor = System.Drawing.Color.DarkGreen;
             }
         }
     }

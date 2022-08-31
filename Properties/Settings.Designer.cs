@@ -37,7 +37,7 @@ namespace NoPanic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        [global::System.Configuration.DefaultSettingValueAttribute("60")]
         public int TestPresence_Frequence {
             get {
                 return ((int)(this["TestPresence_Frequence"]));
@@ -170,7 +170,7 @@ namespace NoPanic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("15000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1500")]
         public int Port_Ecoute {
             get {
                 return ((int)(this["Port_Ecoute"]));
@@ -182,13 +182,25 @@ namespace NoPanic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("15001")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1501")]
         public int Port_Envoi {
             get {
                 return ((int)(this["Port_Envoi"]));
             }
             set {
                 this["Port_Envoi"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string InterfaceFilter_IP {
+            get {
+                return ((string)(this["InterfaceFilter_IP"]));
+            }
+            set {
+                this["InterfaceFilter_IP"] = value;
             }
         }
     }

@@ -17,4 +17,3 @@ C:\Users\Utilisateur\source\repos\Hara54\NoPanic\obj\Debug\NoPanic.csproj.Genera
 C:\Users\Utilisateur\source\repos\Hara54\NoPanic\obj\Debug\NoPanic.csproj.CoreCompileInputs.cache
 C:\Users\Utilisateur\source\repos\Hara54\NoPanic\obj\Debug\NoPanic.exe
 C:\Users\Utilisateur\source\repos\Hara54\NoPanic\obj\Debug\NoPanic.pdb
-C:\Users\Utilisateur\source\repos\Hara54\NoPanic\obj\Debug\NoPanic.csprojAssemblyReference.cache

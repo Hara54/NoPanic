@@ -6,7 +6,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="TestPresence_Frequence" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">30</Value>
+      <Value Profile="(Default)">60</Value>
     </Setting>
     <Setting Name="TestPresence_IP" Type="System.String" Scope="User">
       <Value Profile="(Default)">255.255.255.255</Value>
@@ -39,10 +39,13 @@
       <Value Profile="(Default)">Est-vous sûr de vouloir quitter l'application NoPanic ?</Value>
     </Setting>
     <Setting Name="Port_Ecoute" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">15000</Value>
+      <Value Profile="(Default)">1500</Value>
     </Setting>
     <Setting Name="Port_Envoi" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">15001</Value>
+      <Value Profile="(Default)">1501</Value>
+    </Setting>
+    <Setting Name="InterfaceFilter_IP" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

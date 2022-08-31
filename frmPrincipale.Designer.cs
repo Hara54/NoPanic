@@ -33,7 +33,6 @@
             this.tiNoPanic = new System.Windows.Forms.NotifyIcon(this.components);
             this.btnFermer = new System.Windows.Forms.Button();
             this.lblDescription = new System.Windows.Forms.Label();
-            this.lblVersion = new System.Windows.Forms.Label();
             this.lblEtat = new System.Windows.Forms.Label();
             this.btnQuitter = new System.Windows.Forms.Button();
             this.lblEtatText = new System.Windows.Forms.Label();
@@ -46,7 +45,7 @@
             this.tiNoPanic.Icon = ((System.Drawing.Icon)(resources.GetObject("tiNoPanic.Icon")));
             this.tiNoPanic.Text = "NoPanic";
             this.tiNoPanic.Visible = true;
-            this.tiNoPanic.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tiNoPanic_Click);
+            this.tiNoPanic.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TiNoPanic_Click);
             // 
             // btnFermer
             // 
@@ -57,7 +56,7 @@
             this.btnFermer.TabIndex = 0;
             this.btnFermer.Text = "Fermer";
             this.btnFermer.UseVisualStyleBackColor = true;
-            this.btnFermer.Click += new System.EventHandler(this.btnFermer_Click);
+            this.btnFermer.Click += new System.EventHandler(this.BtnFermer_Click);
             // 
             // lblDescription
             // 
@@ -69,21 +68,10 @@
             this.lblDescription.Text = "Description";
             this.lblDescription.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lblVersion
-            // 
-            this.lblVersion.Font = new System.Drawing.Font("Comic Sans MS", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblVersion.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.lblVersion.Location = new System.Drawing.Point(2, 32);
-            this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(259, 21);
-            this.lblVersion.TabIndex = 2;
-            this.lblVersion.Text = "Version";
-            this.lblVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // lblEtat
             // 
             this.lblEtat.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblEtat.Location = new System.Drawing.Point(137, 78);
+            this.lblEtat.Location = new System.Drawing.Point(137, 71);
             this.lblEtat.Name = "lblEtat";
             this.lblEtat.Size = new System.Drawing.Size(124, 23);
             this.lblEtat.TabIndex = 3;
@@ -98,11 +86,11 @@
             this.btnQuitter.TabIndex = 4;
             this.btnQuitter.Text = "Quitter";
             this.btnQuitter.UseVisualStyleBackColor = true;
-            this.btnQuitter.Click += new System.EventHandler(this.btnQuitter_Click);
+            this.btnQuitter.Click += new System.EventHandler(this.BtnQuitter_Click);
             // 
             // lblEtatText
             // 
-            this.lblEtatText.Location = new System.Drawing.Point(12, 78);
+            this.lblEtatText.Location = new System.Drawing.Point(12, 71);
             this.lblEtatText.Name = "lblEtatText";
             this.lblEtatText.Size = new System.Drawing.Size(126, 23);
             this.lblEtatText.TabIndex = 5;
@@ -111,7 +99,7 @@
             // 
             // lblKeyText
             // 
-            this.lblKeyText.Location = new System.Drawing.Point(12, 55);
+            this.lblKeyText.Location = new System.Drawing.Point(12, 48);
             this.lblKeyText.Name = "lblKeyText";
             this.lblKeyText.Size = new System.Drawing.Size(126, 23);
             this.lblKeyText.TabIndex = 6;
@@ -121,7 +109,7 @@
             // lblKey
             // 
             this.lblKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblKey.Location = new System.Drawing.Point(137, 55);
+            this.lblKey.Location = new System.Drawing.Point(137, 48);
             this.lblKey.Name = "lblKey";
             this.lblKey.Size = new System.Drawing.Size(124, 23);
             this.lblKey.TabIndex = 7;
@@ -140,7 +128,6 @@
             this.Controls.Add(this.lblEtatText);
             this.Controls.Add(this.btnQuitter);
             this.Controls.Add(this.lblEtat);
-            this.Controls.Add(this.lblVersion);
             this.Controls.Add(this.lblDescription);
             this.Controls.Add(this.btnFermer);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -151,7 +138,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "NoPanic";
             this.TopMost = true;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmPrincipale_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmPrincipale_FormClosing);
             this.ResumeLayout(false);
 
         }
@@ -161,7 +148,6 @@
         private System.Windows.Forms.NotifyIcon tiNoPanic;
         private System.Windows.Forms.Button btnFermer;
         private System.Windows.Forms.Label lblDescription;
-        private System.Windows.Forms.Label lblVersion;
         private System.Windows.Forms.Label lblEtat;
         private System.Windows.Forms.Button btnQuitter;
         private System.Windows.Forms.Label lblEtatText;
