@@ -4,6 +4,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
@@ -11,6 +12,23 @@ namespace NoPanic
 {
     static class Program
     {
+        /* MUTEX */
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool SetForegroundWindow(IntPtr hWnd);
+        [DllImport("user32.dll")]
+        static extern bool IsIconic(IntPtr hWnd);
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        const int SW_RESTORE = 9;
+        [DllImport("user32.dll")]
+        static extern IntPtr GetLastActivePopup(IntPtr hWnd);
+        [DllImport("user32.dll")]
+        static extern bool IsWindowEnabled(IntPtr hWnd);
+        private static Mutex mutex = null;
+
         [Flags]
         public enum EXECUTION_STATE : uint {
             ES_SYSTEM_REQUIRED = 0x00000001,
@@ -36,6 +54,15 @@ namespace NoPanic
 
         [STAThread]
         static void Main() {
+            try {
+                bool createdNew = false;
+                mutex = new Mutex(false, Application.ProductName, out createdNew);
+                if (!createdNew) {
+                    SetFocusToPreviousInstance(Application.ProductName);
+                    return;
+                }
+            } catch { }
+
             string ConfigPath = "";
             string[] args = Environment.GetCommandLineArgs();
             bool Config = args.Contains("/config", StringComparer.OrdinalIgnoreCase);
@@ -69,6 +96,21 @@ namespace NoPanic
             Application.SetCompatibleTextRenderingDefault(false);
             frmPrincipale myForm = new frmPrincipale();
             Application.Run();
+        }
+        private static void SetFocusToPreviousInstance(string windowCaption) {
+            IntPtr hWnd = FindWindow(null, windowCaption);
+
+            if (hWnd != null) {
+                IntPtr hPopupWnd = GetLastActivePopup(hWnd);
+
+                if (hPopupWnd != null && IsWindowEnabled(hPopupWnd)) {
+                    hWnd = hPopupWnd;
+                }
+                if (IsIconic(hWnd)) {
+                    ShowWindow(hWnd, SW_RESTORE);
+                }
+                SetForegroundWindow(hWnd);
+            }
         }
     }
 }
