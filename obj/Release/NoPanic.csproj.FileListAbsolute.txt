@@ -18,3 +18,4 @@ C:\Users\Utilisateur\source\repos\Hara54\NoPanic\obj\Release\NoPanic.csproj.Gene
 C:\Users\Utilisateur\source\repos\Hara54\NoPanic\obj\Release\NoPanic.csproj.CoreCompileInputs.cache
 C:\Users\Utilisateur\source\repos\Hara54\NoPanic\obj\Release\NoPanic.exe
 C:\Users\Utilisateur\source\repos\Hara54\NoPanic\obj\Release\NoPanic.pdb
+C:\Users\Utilisateur\source\repos\Hara54\NoPanic\obj\Release\NoPanic.csprojAssemblyReference.cache

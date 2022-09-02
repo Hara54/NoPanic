@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("NoPanic")]
 [assembly: AssemblyDescription("Programme d'alerte en cas d'agresssion")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("SIDSIC 54")]
+[assembly: AssemblyCompany("BOUCHIBA Mehdy")]
 [assembly: AssemblyProduct("NoPanic")]
 [assembly: AssemblyCopyright("Copyright © 2022 BOUCHIBA Mehdy")]
 [assembly: AssemblyTrademark("")]

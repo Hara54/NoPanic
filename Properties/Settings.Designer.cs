@@ -34,7 +34,52 @@ namespace NoPanic.Properties {
                 this["Veille_Desactive"] = value;
             }
         }
-        
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string InterfaceFilter_IP
+        {
+            get
+            {
+                return ((string)(this["InterfaceFilter_IP"]));
+            }
+            set
+            {
+                this["InterfaceFilter_IP"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1500")]
+        public int Port_Ecoute
+        {
+            get
+            {
+                return ((int)(this["Port_Ecoute"]));
+            }
+            set
+            {
+                this["Port_Ecoute"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1501")]
+        public int Port_Envoi
+        {
+            get
+            {
+                return ((int)(this["Port_Envoi"]));
+            }
+            set
+            {
+                this["Port_Envoi"] = value;
+            }
+        }
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("60")]
@@ -165,42 +210,6 @@ namespace NoPanic.Properties {
             }
             set {
                 this["Quitter_Message"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1500")]
-        public int Port_Ecoute {
-            get {
-                return ((int)(this["Port_Ecoute"]));
-            }
-            set {
-                this["Port_Ecoute"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1501")]
-        public int Port_Envoi {
-            get {
-                return ((int)(this["Port_Envoi"]));
-            }
-            set {
-                this["Port_Envoi"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string InterfaceFilter_IP {
-            get {
-                return ((string)(this["InterfaceFilter_IP"]));
-            }
-            set {
-                this["InterfaceFilter_IP"] = value;
             }
         }
     }
