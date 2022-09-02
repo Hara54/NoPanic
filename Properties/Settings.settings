@@ -13,7 +13,7 @@
     </Setting>
     <Setting Name="Port_Envoi" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1501</Value>
-    </Setting>   
+    </Setting>
     <Setting Name="TestPresence_Frequence" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">60</Value>
     </Setting>
@@ -41,6 +41,21 @@
     <Setting Name="Erreur_Message" Type="System.String" Scope="User">
       <Value Profile="(Default)">Ce message apparait si vous avez un problème de communication ou qu'aucun autre client NoPanic n'est présent sur le réseau.</Value>
     </Setting>
+    <Setting Name="Titre_Touche" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Touches d'activation :</Value>
+    </Setting>
+    <Setting Name="Titre_Etat" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Etat de fonctionnement :</Value>
+    </Setting>
+    <Setting Name="Etat_OK" Type="System.String" Scope="User">
+      <Value Profile="(Default)">OK</Value>
+    </Setting>
+    <Setting Name="Etat_INACTIF" Type="System.String" Scope="User">
+      <Value Profile="(Default)">INACTIF</Value>
+    </Setting>
+    <Setting Name="Etat_NOK" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ERREUR</Value>
+    </Setting>    
     <Setting Name="Quitter_Titre" Type="System.String" Scope="User">
       <Value Profile="(Default)">Confirmation</Value>
     </Setting>

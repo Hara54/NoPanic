@@ -20,6 +20,9 @@ namespace NoPanic
             InitializeComponent();
             this.Text = Assembly.GetExecutingAssembly().GetName().Name + " - Version " + Assembly.GetExecutingAssembly().GetName().Version;
             lblDescription.Text = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
+            lblKeyText.Text = Properties.Settings.Default.Titre_Touche;
+            lblEtatText.Text = Properties.Settings.Default.Titre_Etat;
+
             udp_alerte.Etat_Change += Etat_Update;
             Etat_Update();
 
@@ -85,7 +88,7 @@ namespace NoPanic
         private void Etat_Update() {
             if (udp_alerte.Etat == 0) {
                 tiNoPanic.Icon = Properties.Resources.Etat_NOK;
-                lblEtat.Text = "ERREUR";
+                lblEtat.Text = Properties.Settings.Default.Etat_NOK;
                 lblEtat.ForeColor = System.Drawing.Color.DarkRed;
                 if (Properties.Settings.Default.Erreur_Message != "") { 
                     tiNoPanic.ShowBalloonTip(700, "Avertissement", Properties.Settings.Default.Erreur_Message, ToolTipIcon.Warning);
@@ -93,12 +96,12 @@ namespace NoPanic
             }
             if (udp_alerte.Etat == 1) {
                 tiNoPanic.Icon = Properties.Resources.Etat_INACTIF;
-                lblEtat.Text = "INACTIF";
+                lblEtat.Text = Properties.Settings.Default.Etat_INACTIF;
                 lblEtat.ForeColor = System.Drawing.Color.DarkKhaki;
             }
             if (udp_alerte.Etat == 2) {
                 tiNoPanic.Icon = Properties.Resources.Etat_OK;
-                lblEtat.Text = "OK";
+                lblEtat.Text = Properties.Settings.Default.Etat_OK;
                 lblEtat.ForeColor = System.Drawing.Color.DarkGreen;
             }
         }

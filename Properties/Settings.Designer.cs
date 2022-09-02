@@ -34,52 +34,43 @@ namespace NoPanic.Properties {
                 this["Veille_Desactive"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string InterfaceFilter_IP
-        {
-            get
-            {
+        public string InterfaceFilter_IP {
+            get {
                 return ((string)(this["InterfaceFilter_IP"]));
             }
-            set
-            {
+            set {
                 this["InterfaceFilter_IP"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1500")]
-        public int Port_Ecoute
-        {
-            get
-            {
+        public int Port_Ecoute {
+            get {
                 return ((int)(this["Port_Ecoute"]));
             }
-            set
-            {
+            set {
                 this["Port_Ecoute"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1501")]
-        public int Port_Envoi
-        {
-            get
-            {
+        public int Port_Envoi {
+            get {
                 return ((int)(this["Port_Envoi"]));
             }
-            set
-            {
+            set {
                 this["Port_Envoi"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("60")]
@@ -210,6 +201,66 @@ namespace NoPanic.Properties {
             }
             set {
                 this["Quitter_Message"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Touches d\'activation :")]
+        public string Titre_Touche {
+            get {
+                return ((string)(this["Titre_Touche"]));
+            }
+            set {
+                this["Titre_Touche"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Etat de fonctionnement :")]
+        public string Titre_Etat {
+            get {
+                return ((string)(this["Titre_Etat"]));
+            }
+            set {
+                this["Titre_Etat"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("OK")]
+        public string Etat_OK {
+            get {
+                return ((string)(this["Etat_OK"]));
+            }
+            set {
+                this["Etat_OK"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("INACTIF")]
+        public string Etat_INACTIF {
+            get {
+                return ((string)(this["Etat_INACTIF"]));
+            }
+            set {
+                this["Etat_INACTIF"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ERREUR")]
+        public string Etat_NOK {
+            get {
+                return ((string)(this["Etat_NOK"]));
+            }
+            set {
+                this["Etat_NOK"] = value;
             }
         }
     }
