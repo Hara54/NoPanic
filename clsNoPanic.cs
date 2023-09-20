@@ -104,7 +104,7 @@ namespace NoPanic
                         Present = 0;
                         break;
                     case "CONFIGURER":
-                        Envoyer(ip.Address.ToString(), "CONFIGURATION|" + Environment.MachineName + "|" + System.Reflection.Assembly.GetEntryAssembly().Location + "|" + ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath + "|" + Environment.UserName);
+                        Envoyer(ip.Address.ToString(), "CONFIGURATION|" + Environment.MachineName + "|" + System.Reflection.Assembly.GetEntryAssembly().Location + "|" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version  + "|"  + ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath + "|" + Environment.UserName);
                         break;
                     default:
                         Envoyer(ip.Address.ToString(), "ALERTE");
@@ -146,7 +146,8 @@ namespace NoPanic
             }
             if (Present >= 3) { Etat = 0; }
         }
-        public void Envoyer_Alerte() {
+        public void Envoyer_Alerte()
+        {
             string Alerte_Message = Properties.Settings.Default.Alerte_Message;
             
             try {

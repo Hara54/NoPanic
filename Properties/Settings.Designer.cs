@@ -182,30 +182,6 @@ namespace NoPanic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Confirmation")]
-        public string Quitter_Titre {
-            get {
-                return ((string)(this["Quitter_Titre"]));
-            }
-            set {
-                this["Quitter_Titre"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Est-vous sûr de vouloir quitter l\'application NoPanic ?")]
-        public string Quitter_Message {
-            get {
-                return ((string)(this["Quitter_Message"]));
-            }
-            set {
-                this["Quitter_Message"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Touches d\'activation :")]
         public string Titre_Touche {
             get {
@@ -261,6 +237,30 @@ namespace NoPanic.Properties {
             }
             set {
                 this["Etat_NOK"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Confirmation")]
+        public string Quitter_Titre {
+            get {
+                return ((string)(this["Quitter_Titre"]));
+            }
+            set {
+                this["Quitter_Titre"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Est-vous sûr de vouloir quitter l\'application NoPanic ?")]
+        public string Quitter_Message {
+            get {
+                return ((string)(this["Quitter_Message"]));
+            }
+            set {
+                this["Quitter_Message"] = value;
             }
         }
     }

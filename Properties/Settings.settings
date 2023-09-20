@@ -55,7 +55,7 @@
     </Setting>
     <Setting Name="Etat_NOK" Type="System.String" Scope="User">
       <Value Profile="(Default)">ERREUR</Value>
-    </Setting>    
+    </Setting>
     <Setting Name="Quitter_Titre" Type="System.String" Scope="User">
       <Value Profile="(Default)">Confirmation</Value>
     </Setting>
