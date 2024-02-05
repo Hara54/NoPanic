@@ -109,6 +109,54 @@ namespace NoPanic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Alerte_SMTP {
+            get {
+                return ((string)(this["Alerte_SMTP"]));
+            }
+            set {
+                this["Alerte_SMTP"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("587")]
+        public int Alerte_SMTP_Port {
+            get {
+                return ((int)(this["Alerte_SMTP_Port"]));
+            }
+            set {
+                this["Alerte_SMTP_Port"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Alerte_Mail_From {
+            get {
+                return ((string)(this["Alerte_Mail_From"]));
+            }
+            set {
+                this["Alerte_Mail_From"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Alerte_Mail_To {
+            get {
+                return ((string)(this["Alerte_Mail_To"]));
+            }
+            set {
+                this["Alerte_Mail_To"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("2")]
         public int Alerte_Touche {
             get {

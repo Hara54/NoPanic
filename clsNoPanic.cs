@@ -5,6 +5,7 @@ using System.Media;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Net.Mail;
 using System.Text;
 using System.Timers;
 using System.Windows.Forms;
@@ -164,6 +165,20 @@ namespace NoPanic
             
             foreach (string IP in Properties.Settings.Default.Alerte_IP.Split(',')) {
                 Envoyer(IP, Alerte_Message);
+            }
+            
+            if ((Properties.Settings.Default.Alerte_Mail_From != "") && (Properties.Settings.Default.Alerte_Mail_To != "") && (Properties.Settings.Default.Alerte_SMTP != "")) {
+                MailMessage mailMessage = new MailMessage{
+                    From = new MailAddress(Properties.Settings.Default.Alerte_Mail_From)
+                };
+                mailMessage.To.Add(Properties.Settings.Default.Alerte_Mail_To);
+                mailMessage.Subject = Properties.Settings.Default.Alerte_Titre;
+                mailMessage.Body = Alerte_Message;
+                SmtpClient smtpClient = new SmtpClient {
+                    Host = Properties.Settings.Default.Alerte_SMTP,
+                    Port = Properties.Settings.Default.Alerte_SMTP_Port
+                };
+                try { smtpClient.Send(mailMessage); } catch {  }
             }
         }
 

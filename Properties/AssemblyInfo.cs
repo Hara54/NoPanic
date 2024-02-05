@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("BOUCHIBA Mehdy")]
 [assembly: AssemblyProduct("NoPanic")]
-[assembly: AssemblyCopyright("Copyright © 2022 BOUCHIBA Mehdy")]
+[assembly: AssemblyCopyright("Copyright © 2024 BOUCHIBA Mehdy")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // Vous pouvez spécifier toutes les valeurs ou indiquer les numéros de build et de révision par défaut 
 // en utilisant '*', comme indiqué ci-dessous :
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.2.0.3")]
-[assembly: AssemblyFileVersion("1.2.0.3")]
+[assembly: AssemblyVersion("1.3.0.0")]
+[assembly: AssemblyFileVersion("1.3.0.0")]
