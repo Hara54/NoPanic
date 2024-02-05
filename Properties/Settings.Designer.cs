@@ -121,7 +121,7 @@ namespace NoPanic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("587")]
+        [global::System.Configuration.DefaultSettingValueAttribute("25")]
         public int Alerte_SMTP_Port {
             get {
                 return ((int)(this["Alerte_SMTP_Port"]));

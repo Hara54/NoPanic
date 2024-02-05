@@ -173,7 +173,7 @@ namespace NoPanic
                 };
                 mailMessage.To.Add(Properties.Settings.Default.Alerte_Mail_To);
                 mailMessage.Subject = Properties.Settings.Default.Alerte_Titre;
-                mailMessage.Body = Alerte_Message;
+                mailMessage.Body = Properties.Settings.Default.Alerte_Titre + " " + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + " : " + Alerte_Message;
                 SmtpClient smtpClient = new SmtpClient {
                     Host = Properties.Settings.Default.Alerte_SMTP,
                     Port = Properties.Settings.Default.Alerte_SMTP_Port
