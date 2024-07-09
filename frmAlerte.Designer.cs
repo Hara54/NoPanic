@@ -51,7 +51,7 @@
             // 
             this.tmrAlerte.Enabled = true;
             this.tmrAlerte.Interval = 600;
-            this.tmrAlerte.Tick += new System.EventHandler(this.tmrAlerte_Tick);
+            this.tmrAlerte.Tick += new System.EventHandler(this.TmrAlerte_Tick);
             // 
             // lblAlerte
             // 
@@ -84,7 +84,7 @@
             this.btnAlerte.TabIndex = 3;
             this.btnAlerte.Text = "X";
             this.btnAlerte.UseVisualStyleBackColor = true;
-            this.btnAlerte.Click += new System.EventHandler(this.btnAlerte_Click);
+            this.btnAlerte.Click += new System.EventHandler(this.BtnAlerte_Click);
             // 
             // frmAlerte
             // 
@@ -104,7 +104,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Alerte";
             this.TopMost = true;
-            this.Load += new System.EventHandler(this.frmAlerte_Load);
+            this.Load += new System.EventHandler(this.FrmAlerte_Load);
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
