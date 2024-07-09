@@ -101,14 +101,8 @@ namespace NoPanic
                         case "ALERTE":
                             if (Properties.Settings.Default.Alerte_Confirmation != "")
                             {
-                                bool frmExist = false;
-                                FormCollection fc = Application.OpenForms;
-                                foreach (Form frm in fc) { if (frm.Text == "Alerte") { frmExist = true; break; } }
-                                if (frmExist == false)
-                                {
-                                    frmAlerte fAlert1 = new frmAlerte(Properties.Settings.Default.Alerte_Confirmation);
-                                    _ = fAlert1.ShowDialog();
-                                }
+                               frmAlerte fAlert1 = new frmAlerte(Properties.Settings.Default.Alerte_Confirmation);
+                               _ = fAlert1.ShowDialog();
                             }
                             break;
                         case "PRESENT":
@@ -132,6 +126,7 @@ namespace NoPanic
                                 }
                             }
                             catch { }
+
                             frmAlerte fAlert2 = new frmAlerte(message);
                             _ = fAlert2.ShowDialog();
                             break;
@@ -171,44 +166,50 @@ namespace NoPanic
         }
         public void Envoyer_Alerte()
         {
-            string Alerte_Message = Properties.Settings.Default.Alerte_Message;
-
-            try
+            bool frmExist = false;
+            FormCollection fc = Application.OpenForms;
+            foreach (Form frm in fc) { if (frm.Text == "Alerte") { frmExist = true; break; } }
+            if (frmExist == false)
             {
-                UserPrincipal userPrincipal = UserPrincipal.Current;
-                if (userPrincipal.DisplayName == null)
+                string Alerte_Message = Properties.Settings.Default.Alerte_Message;
+
+                try
                 {
-                    Alerte_Message = Alerte_Message.Replace("%NOM%", Environment.UserName);
+                    UserPrincipal userPrincipal = UserPrincipal.Current;
+                    if (userPrincipal.DisplayName == null)
+                    {
+                        Alerte_Message = Alerte_Message.Replace("%NOM%", Environment.UserName);
+                    }
+                    else
+                    {
+                        Alerte_Message = Alerte_Message.Replace("%NOM%", userPrincipal.DisplayName);
+                    }
                 }
-                else
+                catch { Alerte_Message = Alerte_Message.Replace("%NOM%", Environment.UserName); }
+
+                Alerte_Message = Alerte_Message.Replace("%LOGIN%", Environment.UserName);
+
+                foreach (string mIP in Properties.Settings.Default.Alerte_IP.Split(','))
                 {
-                    Alerte_Message = Alerte_Message.Replace("%NOM%", userPrincipal.DisplayName);
+                    Envoyer(mIP, Alerte_Message);
                 }
-            }
-            catch { Alerte_Message = Alerte_Message.Replace("%NOM%", Environment.UserName); }
 
-            Alerte_Message = Alerte_Message.Replace("%LOGIN%", Environment.UserName);
-
-            foreach (string mIP in Properties.Settings.Default.Alerte_IP.Split(','))
-            {
-                Envoyer(mIP, Alerte_Message);
-            }
-
-            if ((Properties.Settings.Default.Alerte_Mail_From != "") && (Properties.Settings.Default.Alerte_Mail_To != "") && (Properties.Settings.Default.Alerte_SMTP != ""))
-            {
-                MailMessage mailMessage = new MailMessage
+                if ((Properties.Settings.Default.Alerte_Mail_From != "") && (Properties.Settings.Default.Alerte_Mail_To != "") && (Properties.Settings.Default.Alerte_SMTP != ""))
                 {
-                    From = new MailAddress(Properties.Settings.Default.Alerte_Mail_From)
-                };
-                mailMessage.To.Add(Properties.Settings.Default.Alerte_Mail_To);
-                mailMessage.Subject = Properties.Settings.Default.Alerte_Titre;
-                mailMessage.Body = Properties.Settings.Default.Alerte_Titre + " " + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + " : " + Alerte_Message;
-                SmtpClient smtpClient = new SmtpClient
-                {
-                    Host = Properties.Settings.Default.Alerte_SMTP,
-                    Port = Properties.Settings.Default.Alerte_SMTP_Port
-                };
-                try { smtpClient.Send(mailMessage); } catch { }
+                    MailMessage mailMessage = new MailMessage
+                    {
+                        From = new MailAddress(Properties.Settings.Default.Alerte_Mail_From)
+                    };
+                    mailMessage.To.Add(Properties.Settings.Default.Alerte_Mail_To);
+                    mailMessage.Subject = Properties.Settings.Default.Alerte_Titre;
+                    mailMessage.Body = Properties.Settings.Default.Alerte_Titre + " " + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + " : " + Alerte_Message;
+                    SmtpClient smtpClient = new SmtpClient
+                    {
+                        Host = Properties.Settings.Default.Alerte_SMTP,
+                        Port = Properties.Settings.Default.Alerte_SMTP_Port
+                    };
+                    try { smtpClient.Send(mailMessage); } catch { }
+                }
             }
         }
 
