@@ -63,8 +63,8 @@ namespace NoPanic
                 }
             } catch { }
 
-            string ConfigPath = "";
-            string[] args = Environment.GetCommandLineArgs();
+            String ConfigPath = "";
+            String[] args = Environment.GetCommandLineArgs();
             bool Config = args.Contains("/config", StringComparer.OrdinalIgnoreCase);
             if (Config) {
                 Config = false;
@@ -77,7 +77,7 @@ namespace NoPanic
                     try {
                         if (!File.Exists(ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath)) { Properties.Settings.Default.Alerte_Touche = 2; Properties.Settings.Default.Save(); }
                         Configuration configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
-                        string appSettingsXmlName = appSettings.Context["GroupName"].ToString();
+                        String appSettingsXmlName = appSettings.Context["GroupName"].ToString();
                         XDocument import = XDocument.Load(configuration.FilePath);
                         XDocument importFile = XDocument.Load(ConfigPath);
                         IEnumerable<XElement> combinedUnique = import.Descendants("setting").Concat(importFile.Descendants("setting")).GroupBy(x => (string)x.Attribute("name")).Select(g => g.Last());

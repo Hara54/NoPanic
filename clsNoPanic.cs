@@ -14,9 +14,9 @@ namespace NoPanic
 {
     class ClsNoPanic
     {
-        private long Present;
-        private string IP;
-        private UdpClient u;
+        private int Present = 1;
+        private String IP = "";
+        private UdpClient u = null;
         private static readonly int Port_Ecoute = Properties.Settings.Default.Port_Ecoute;
         private static readonly int Port_Envoi = Properties.Settings.Default.Port_Envoi;
         private readonly System.Timers.Timer tTestPresence = new System.Timers.Timer();
@@ -74,58 +74,59 @@ namespace NoPanic
         }
         
         private void Ecouter() {
-            try { IAsyncResult u_ar = u.BeginReceive(Recevoir, new object()); } catch { }
+            try { IAsyncResult u_ar = u.BeginReceive(Recevoir, new object()); } catch { Change_IP(null, null); }
         }
         private void Recevoir(IAsyncResult u_ar) {
             try {
                 IPEndPoint ip = new IPEndPoint(IPAddress.Any, Port_Ecoute);
                 byte[] bytes = u.EndReceive(u_ar, ref ip);
-                string message = Encoding.ASCII.GetString(bytes);
+                String message = Encoding.ASCII.GetString(bytes);
 
-                if (message.StartsWith("NoPanic|") && (IP != ip.Address.ToString())) { message = message.Split('|')[1]; } else { Ecouter(); return; }
-                switch (message) {
-                    case "ALERTE":
-                        if (Properties.Settings.Default.Alerte_Confirmation != "") {
-                            bool frmExist = false;
-                            FormCollection fc = Application.OpenForms;
-                            foreach (Form frm in fc) { if (frm.Text == "Alerte") { frmExist = true; break; } }
-                            if (frmExist == false) {
-                                frmAlerte fAlert1 = new frmAlerte(Properties.Settings.Default.Alerte_Confirmation);
-                                fAlert1.ShowDialog();
+                if (message.StartsWith("NoPanic|") && (IP != ip.Address.ToString())) {
+                    message = message.Split('|')[1];
+                    switch (message) {
+                        case "ALERTE":
+                            if (Properties.Settings.Default.Alerte_Confirmation != "") {
+                                bool frmExist = false;
+                                FormCollection fc = Application.OpenForms;
+                                foreach (Form frm in fc) { if (frm.Text == "Alerte") { frmExist = true; break; } }
+                                if (frmExist == false) {
+                                    frmAlerte fAlert1 = new frmAlerte(Properties.Settings.Default.Alerte_Confirmation);
+                                    fAlert1.ShowDialog();
+                                }
                             }
-                        }
-                        break;
-                    case "PRESENT":
-                        Etat = 2;
-                        Present = 0;
-                        break;
-                    case "PRESENCE":
-                        Envoyer(ip.Address.ToString(), "PRESENT");
-                        Etat = 2;
-                        Present = 0;
-                        break;
-                    case "CONFIGURER":
-                        Envoyer(ip.Address.ToString(), "CONFIGURATION|" + Environment.MachineName + "|" + System.Reflection.Assembly.GetEntryAssembly().Location + "|" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version  + "|"  + ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath + "|" + Environment.UserName);
-                        break;
-                    default:
-                        Envoyer(ip.Address.ToString(), "ALERTE");
-                        try {
-                            if (Properties.Settings.Default.Alerte_Son) {
-                                SoundPlayer player = new SoundPlayer(Properties.Resources.Alerte);
-                                player.Load();
-                                player.Play();
-                            }
-                        } catch { }
-                        frmAlerte fAlert2 = new frmAlerte(message);
-                        fAlert2.ShowDialog();
-                        break;
+                            break;
+                        case "PRESENT":
+                            Etat = 2;
+                            Present = 0;
+                            break;
+                        case "PRESENCE":
+                            Envoyer(ip.Address.ToString(), "PRESENT");
+                            Etat = 2;
+                            Present = 0;
+                            break;
+                        default:
+                            Envoyer(ip.Address.ToString(), "ALERTE");
+                            try {
+                                if (Properties.Settings.Default.Alerte_Son) {
+                                    SoundPlayer player = new SoundPlayer(Properties.Resources.Alerte);
+                                    player.Load();
+                                    player.Play();
+                                }
+                            } catch { }
+                            frmAlerte fAlert2 = new frmAlerte(message);
+                            fAlert2.ShowDialog();
+                            break;
+                    }
                 }
-            } catch { }
-            Ecouter();
+            }
+            catch { }
+            finally { Ecouter(); }
         }
         private void Envoyer(string sIP, string sMessage) {
+            UdpClient client = null;
             try {
-                UdpClient client = new UdpClient(new IPEndPoint(IPAddress.Parse(IP), Port_Envoi));
+                client = new UdpClient(new IPEndPoint(IPAddress.Parse(IP), Port_Envoi));
                 IPEndPoint mip = null;
                 if (sIP.Contains(".")) {
                     mip = new IPEndPoint(IPAddress.Parse(sIP), Port_Ecoute); 
@@ -134,18 +135,19 @@ namespace NoPanic
                 }
                 byte[] bytes = Encoding.ASCII.GetBytes("NoPanic|" + sMessage);
                 client.Send(bytes, bytes.Length, mip);
-                client.Close();
-            } catch { }
+            } 
+            catch { } 
+            finally { client.Close(); }
         }
         
         private void Envoyer_Presence(object source, ElapsedEventArgs e) {
-            Present += 1;
+            if (Present < 3) { Present += 1; }
             if (Present >= 2) {
-                foreach (string IP in Properties.Settings.Default.TestPresence_IP.Split(',')) {
-                    Envoyer(IP, "PRESENCE");
+                foreach (String mIP in Properties.Settings.Default.TestPresence_IP.Split(',')) {
+                    Envoyer(mIP, "PRESENCE");
                 }
             }
-            if (Present >= 3) { Etat = 0; }
+            if (Present == 3) { Etat = 0; }
         }
         public void Envoyer_Alerte()
         {
@@ -163,8 +165,8 @@ namespace NoPanic
 
             Alerte_Message = Alerte_Message.Replace("%LOGIN%", Environment.UserName);
             
-            foreach (string IP in Properties.Settings.Default.Alerte_IP.Split(',')) {
-                Envoyer(IP, Alerte_Message);
+            foreach (String mIP in Properties.Settings.Default.Alerte_IP.Split(',')) {
+                Envoyer(mIP, Alerte_Message);
             }
             
             if ((Properties.Settings.Default.Alerte_Mail_From != "") && (Properties.Settings.Default.Alerte_Mail_To != "") && (Properties.Settings.Default.Alerte_SMTP != "")) {
