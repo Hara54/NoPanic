@@ -133,7 +133,7 @@ namespace NoPanic
                     }
                 }
             }
-            catch { }
+            catch { Etat = 0; }
             finally { Ecouter(); }
         }
         private void Envoyer(string sIP, string sMessage)
@@ -148,7 +148,7 @@ namespace NoPanic
                 byte[] bytes = Encoding.ASCII.GetBytes("NoPanic|" + sMessage);
                 _ = client.Send(bytes, bytes.Length, mip);
             } 
-            catch { } 
+            catch { Etat = 0; } 
             finally { client.Close(); }
         }
 
