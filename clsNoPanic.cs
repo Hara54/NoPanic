@@ -101,8 +101,14 @@ namespace NoPanic
                         case "ALERTE":
                             if (Properties.Settings.Default.Alerte_Confirmation != "")
                             {
-                               frmAlerte fAlert1 = new frmAlerte(Properties.Settings.Default.Alerte_Confirmation);
-                               _ = fAlert1.ShowDialog();
+                                bool frmExist = false;
+                                FormCollection fc = Application.OpenForms;
+                                foreach (Form frm in fc) { if (frm.Text == "Alerte") { frmExist = true; break; } }
+                                if (frmExist == false)
+                                {
+                                    frmAlerte fAlert1 = new frmAlerte(Properties.Settings.Default.Alerte_Confirmation);
+                                    _ = fAlert1.ShowDialog();
+                                }
                             }
                             break;
                         case "PRESENT":
