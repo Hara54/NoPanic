@@ -158,12 +158,12 @@ namespace NoPanic.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("2")]
-        public int Alerte_Touche {
+        public int Alerte_Touche_Modifier {
             get {
-                return ((int)(this["Alerte_Touche"]));
+                return ((int)(this["Alerte_Touche_Modifier"]));
             }
             set {
-                this["Alerte_Touche"] = value;
+                this["Alerte_Touche_Modifier"] = value;
             }
         }
         
@@ -309,6 +309,18 @@ namespace NoPanic.Properties {
             }
             set {
                 this["Quitter_Message"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("F12")]
+        public string Alerte_Touche_Final {
+            get {
+                return ((string)(this["Alerte_Touche_Final"]));
+            }
+            set {
+                this["Alerte_Touche_Final"] = value;
             }
         }
     }

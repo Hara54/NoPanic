@@ -3,8 +3,8 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace NoPanic
-{
+namespace NoPanic {
+
     public partial class frmPrincipale : Form
     {
         // Modifier keys codes: Alt = 1, Ctrl = 2, Shift = 4, Win = 8
@@ -13,7 +13,8 @@ namespace NoPanic
         [DllImport("user32.dll")]
         private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
-        private static readonly int Alerte_Touche = Properties.Settings.Default.Alerte_Touche;
+        private static readonly int Alerte_Touche_Modifier = Properties.Settings.Default.Alerte_Touche_Modifier;
+        private static readonly string Alerte_Touche_Final = Properties.Settings.Default.Alerte_Touche_Final;
         private readonly ClsNoPanic udp_alerte = new ClsNoPanic();
 
         public frmPrincipale()
@@ -28,29 +29,37 @@ namespace NoPanic
             Etat_Update();
 
             string Key = "";
-            _ = RegisterHotKey(Handle, 42512, Alerte_Touche, (int)Keys.F12);
-            switch (Alerte_Touche)
+            if (Enum.TryParse(Alerte_Touche_Final, out Keys tkey))
+            {
+                _ = RegisterHotKey(Handle, 42512, Alerte_Touche_Modifier, (int)(Keys)tkey);
+            }
+            else
+            {
+                MessageBox.Show("La touche enregistrée dans le fichier de configuration n'est pas valide : " + Alerte_Touche_Modifier);
+            }
+
+            switch (Alerte_Touche_Modifier)
             {
                 case 1:
-                    Key = "ALT+F12";
+                    Key = "ALT+" + Alerte_Touche_Final;
                     break;
                 case 2:
-                    Key = "CTRL+F12";
+                    Key = "CTRL+" + Alerte_Touche_Final;
                     break;
                 case 3:
-                    Key = "CTRL+ALT+F12";
+                    Key = "CTRL+ALT+" + Alerte_Touche_Final;
                     break;
                 case 4:
-                    Key = "SHIFT+F12";
+                    Key = "SHIFT+" + Alerte_Touche_Final;
                     break;
                 case 5:
-                    Key = "SHIFT+ALT+F12";
+                    Key = "SHIFT+ALT+" + Alerte_Touche_Final;
                     break;
                 case 6:
-                    Key = "CTRL+SHIFT+F12";
+                    Key = "CTRL+SHIFT+" + Alerte_Touche_Final;
                     break;
                 case 7:
-                    Key = "CTRL+ALT+SHIFT+F12";
+                    Key = "CTRL+ALT+SHIFT+" + Alerte_Touche_Final;
                     break;
                 default:
                     Key = "INCONNUE";

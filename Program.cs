@@ -88,7 +88,7 @@ namespace NoPanic
                     Properties.Settings appSettings = Properties.Settings.Default;
                     try
                     {
-                        if (!File.Exists(ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath)) { Properties.Settings.Default.Alerte_Touche = 2; Properties.Settings.Default.Save(); }
+                        if (!File.Exists(ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath)) { Properties.Settings.Default.Alerte_Touche_Modifier = 2; Properties.Settings.Default.Save(); }
                         Configuration configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
                         string appSettingsXmlName = appSettings.Context["GroupName"].ToString();
                         XDocument import = XDocument.Load(configuration.FilePath);

@@ -35,8 +35,11 @@
     <Setting Name="Alerte_Mail_To" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="Alerte_Touche" Type="System.Int32" Scope="User">
+    <Setting Name="Alerte_Touche_Modifier" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="Alerte_Touche_Final" Type="System.String" Scope="User">
+      <Value Profile="(Default)">F12</Value>
     </Setting>
     <Setting Name="Alerte_Son" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
