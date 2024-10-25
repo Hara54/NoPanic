@@ -117,8 +117,6 @@ namespace NoPanic
                             break;
                         case "PRESENCE":
                             Envoyer(ip.Address.ToString(), "PRESENT");
-                            Etat = 2;
-                            Present = 0;
                             break;
                         default:
                             Envoyer(ip.Address.ToString(), "ALERTE");
