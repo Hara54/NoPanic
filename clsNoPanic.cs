@@ -42,7 +42,7 @@ namespace NoPanic
         private void Change_IP(object sender, EventArgs e)
         {
             tTestPresence.Enabled = false;
-            if (u != null) { u.Close(); }
+            u?.Close();
             IP = "";
             Present = 1;
 
@@ -119,6 +119,7 @@ namespace NoPanic
                             Envoyer(ip.Address.ToString(), "PRESENT");
                             break;
                         default:
+                            string messageFinal = string.IsNullOrWhiteSpace(message) ? ip.Address.ToString() : message;
                             Envoyer(ip.Address.ToString(), "ALERTE");
                             try
                             {
@@ -131,14 +132,14 @@ namespace NoPanic
                             }
                             catch { }
 
-                            frmAlerte fAlert2 = new frmAlerte(message);
+                            frmAlerte fAlert2 = new frmAlerte(messageFinal);
                             _ = fAlert2.ShowDialog();
                             break;
                     }
                 }
             }
             catch { Etat = 0; }
-            finally { Ecouter(); }
+            finally { if (u != null) { Ecouter(); } }
         }
         private void Envoyer(string sIP, string sMessage)
         {
@@ -175,23 +176,18 @@ namespace NoPanic
             foreach (Form frm in fc) { if (frm.Text == "Alerte") { frmExist = true; break; } }
             if (frmExist == false)
             {
-                string Alerte_Message = Properties.Settings.Default.Alerte_Message;
+                string Alerte_Message = Properties.Settings.Default.Alerte_Message ?? string.Empty;
+                string login = !string.IsNullOrWhiteSpace(Environment.UserName)
+                    ? Environment.UserName
+                    : Environment.MachineName;
 
-                try
-                {
-                    UserPrincipal userPrincipal = UserPrincipal.Current;
-                    if (userPrincipal.DisplayName == null)
-                    {
-                        Alerte_Message = Alerte_Message.Replace("%NOM%", Environment.UserName);
-                    }
-                    else
-                    {
-                        Alerte_Message = Alerte_Message.Replace("%NOM%", userPrincipal.DisplayName);
-                    }
-                }
-                catch { Alerte_Message = Alerte_Message.Replace("%NOM%", Environment.UserName); }
+                string nomUtilisateur = login;
+                try {
+                    var displayName = UserPrincipal.Current?.DisplayName;
+                    if (!string.IsNullOrWhiteSpace(displayName)) { nomUtilisateur = displayName; }
+                } catch { }
 
-                Alerte_Message = Alerte_Message.Replace("%LOGIN%", Environment.UserName);
+                Alerte_Message = Alerte_Message.Replace("%NOM%", nomUtilisateur).Replace("%LOGIN%", login);
 
                 foreach (string mIP in Properties.Settings.Default.Alerte_IP.Split(','))
                 {
@@ -217,6 +213,6 @@ namespace NoPanic
             }
         }
 
-        ~ClsNoPanic() { try { u.Close(); } catch { } }
+        ~ClsNoPanic() { try { u?.Close(); } catch { } }
     }
 }

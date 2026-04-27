@@ -16,5 +16,6 @@ _Configuration possible_
 - Port du serveur SMTP pour l'envoi d'alertes mail (25)
 - Adresse mail de l'expéditeur pour l'envoi d'alertes mail
 - Adresses mail de reception des alertes mail séparées par une virgule
-- Touche d'action pour envoyer l'alerte agression (1:ALT+F12, 2:CTRL+F12, 3:CTRL+ALT+F12, 4:SHIFT+F12, 5:SHIFT+ALT+F12, 6:CTRL+SHIFT+F12, 7:CTRL+ALT+SHIFT+F12)
+- Touche d'action pour envoyer l'alerte agression - Modifier (1:ALT+???, 2:CTRL+???, 3:CTRL+ALT+???, 4:SHIFT+???, 5:SHIFT+ALT+???, 6:CTRL+SHIFT+???, 7:CTRL+ALT+SHIFT+???)
+- Touche d'action pour envoyer l'alerte agression - Final (F12)
 - Générer un son lors de la réception d'une alerte agression (True/False)
