@@ -8,6 +8,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Timers;
 using System.Windows.Forms;
+using System.IO;
 
 namespace NoPanic
 {
@@ -92,6 +93,9 @@ namespace NoPanic
                 IPEndPoint ip = new IPEndPoint(IPAddress.Any, Port_Ecoute);
                 byte[] bytes = u.EndReceive(u_ar, ref ip);
                 string message = Encoding.ASCII.GetString(bytes);
+                
+                var parts = message.Split('|');
+                if (parts.Length < 2) return;
 
                 if (message.StartsWith("NoPanic|") && (IP != ip.Address.ToString()))
                 {
@@ -106,6 +110,7 @@ namespace NoPanic
                                 foreach (Form frm in fc) { if (frm.Text == "Alerte") { frmExist = true; break; } }
                                 if (frmExist == false)
                                 {
+                                    LogAlerte("RECU", ip.Address.ToString(), "CONFIRMATION");
                                     frmAlerte fAlert1 = new frmAlerte(Properties.Settings.Default.Alerte_Confirmation);
                                     _ = fAlert1.ShowDialog();
                                 }
@@ -119,7 +124,9 @@ namespace NoPanic
                             Envoyer(ip.Address.ToString(), "PRESENT");
                             break;
                         default:
-                            string messageFinal = string.IsNullOrWhiteSpace(message) ? ip.Address.ToString() : message;
+                            if (string.IsNullOrWhiteSpace(message) || message.Length < 3) { return; }
+                            LogAlerte("RECU", ip.Address.ToString(), message);
+
                             Envoyer(ip.Address.ToString(), "ALERTE");
                             try
                             {
@@ -132,7 +139,7 @@ namespace NoPanic
                             }
                             catch { }
 
-                            frmAlerte fAlert2 = new frmAlerte(messageFinal);
+                            frmAlerte fAlert2 = new frmAlerte(message);
                             _ = fAlert2.ShowDialog();
                             break;
                     }
@@ -193,6 +200,7 @@ namespace NoPanic
                 {
                     Envoyer(mIP, Alerte_Message);
                 }
+                LogAlerte("ENVOYE", Environment.MachineName, Alerte_Message);
 
                 if ((Properties.Settings.Default.Alerte_Mail_From != "") && (Properties.Settings.Default.Alerte_Mail_To != "") && (Properties.Settings.Default.Alerte_SMTP != ""))
                 {
@@ -211,6 +219,31 @@ namespace NoPanic
                     try { smtpClient.Send(mailMessage); } catch { }
                 }
             }
+        }
+
+        private void LogAlerte(string type, string ip, string message)
+        {
+            try
+            {
+                string dossier = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"NoPanic");
+                Directory.CreateDirectory(dossier);
+
+                string fichier = Path.Combine(dossier, "alertes.log");
+
+                if (File.Exists(fichier))
+                {
+                    FileInfo fi = new FileInfo(fichier);
+                    if (fi.Length > 1_000_000)
+                    {
+                        string backup = Path.Combine(dossier, "alertes.bak");
+                        if (File.Exists(backup)) { File.Delete(backup); }
+                        File.Move(fichier, backup);
+                    }
+                }
+
+                string ligne = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} | {type,-7} | {ip} | {message}";
+                File.AppendAllText(fichier, ligne + Environment.NewLine, Encoding.UTF8);
+            } catch { }
         }
 
         ~ClsNoPanic() { try { u?.Close(); } catch { } }
