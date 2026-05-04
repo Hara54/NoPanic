@@ -95,9 +95,9 @@ namespace NoPanic
                 string message = Encoding.ASCII.GetString(bytes);
                 
                 var parts = message.Split('|');
-                if (parts.Length < 2) return;
+                if (parts.Length < 3) return;
 
-                if (message.StartsWith("NoPanic|") && (IP != ip.Address.ToString()))
+                if (message.StartsWith("NOPANIC|") && message.EndsWith("|END")  && (IP != ip.Address.ToString()))
                 {
                     message = message.Split('|')[1];
                     switch (message)
@@ -110,7 +110,7 @@ namespace NoPanic
                                 foreach (Form frm in fc) { if (frm.Text == "Alerte") { frmExist = true; break; } }
                                 if (frmExist == false)
                                 {
-                                    LogAlerte("RECU", ip.Address.ToString(), "CONFIRMATION");
+                                    LogAlerte("RECU", ip.Address.ToString(), "ALERTE - CONFIRMATION");
                                     frmAlerte fAlert1 = new frmAlerte(Properties.Settings.Default.Alerte_Confirmation);
                                     _ = fAlert1.ShowDialog();
                                 }
@@ -124,8 +124,8 @@ namespace NoPanic
                             Envoyer(ip.Address.ToString(), "PRESENT");
                             break;
                         default:
-                            if (string.IsNullOrWhiteSpace(message) || message.Length < 3) { return; }
-                            LogAlerte("RECU", ip.Address.ToString(), message);
+                            if (string.IsNullOrWhiteSpace(message)) { return; }
+                            LogAlerte("RECU", ip.Address.ToString(), "ALERTE - " + message);
 
                             Envoyer(ip.Address.ToString(), "ALERTE");
                             try
@@ -157,7 +157,7 @@ namespace NoPanic
                 IPEndPoint mip = sIP.Contains(".")
                     ? new IPEndPoint(IPAddress.Parse(sIP), Port_Ecoute)
                     : new IPEndPoint(Dns.GetHostAddresses(sIP)[0], Port_Ecoute);
-                byte[] bytes = Encoding.ASCII.GetBytes("NoPanic|" + sMessage);
+                byte[] bytes = Encoding.ASCII.GetBytes("NOPANIC|" + sMessage + "|END");
                 _ = client.Send(bytes, bytes.Length, mip);
             } 
             catch { Etat = 0; } 
