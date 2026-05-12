@@ -12,7 +12,7 @@ using System.IO;
 
 namespace NoPanic
 {
-    internal class ClsNoPanic
+    internal class ClsNoPanic : IDisposable
     {
         private int Present = 1;
         private string IP = "";
@@ -23,6 +23,7 @@ namespace NoPanic
 
         public delegate void Etat_Change_Event();
         public event Etat_Change_Event Etat_Change;
+        
         private int _Etat;
         public int Etat
         {
@@ -75,7 +76,7 @@ namespace NoPanic
                     {
                         tTestPresence.Interval = Properties.Settings.Default.TestPresence_Frequence * 1000 / 2;
                         Envoyer_Presence(null, null);
-                        tTestPresence.Enabled = true;
+                        tTestPresence.Start();
                     }
                 }
             }
@@ -92,7 +93,7 @@ namespace NoPanic
             {
                 IPEndPoint ip = new IPEndPoint(IPAddress.Any, Port_Ecoute);
                 byte[] bytes = u.EndReceive(u_ar, ref ip);
-                string message = Encoding.ASCII.GetString(bytes);
+                string message = Encoding.UTF8.GetString(bytes);
                 
                 var parts = message.Split('|');
                 if (parts.Length < 3) return;
@@ -102,7 +103,7 @@ namespace NoPanic
                     message = message.Split('|')[1];
                     switch (message)
                     {
-                        case "ALERTE":
+                        case "CONFIRM":
                             if (Properties.Settings.Default.Alerte_Confirmation != "")
                             {
                                 bool frmExist = false;
@@ -127,17 +128,16 @@ namespace NoPanic
                             if (string.IsNullOrWhiteSpace(message)) { return; }
                             LogAlerte("RECU", ip.Address.ToString(), "ALERTE - " + message);
 
-                            Envoyer(ip.Address.ToString(), "ALERTE");
-                            try
+                            Envoyer(ip.Address.ToString(), "CONFIRM");
+                            if (Properties.Settings.Default.Alerte_Son)
                             {
-                                if (Properties.Settings.Default.Alerte_Son)
-                                {
-                                    SoundPlayer player = new SoundPlayer(Properties.Resources.Alerte);
-                                    player.Load();
-                                    player.Play();
-                                }
+                                try {
+                                    using (SoundPlayer player = new SoundPlayer(Properties.Resources.Alerte)) {
+                                        player.Load();
+                                        player.Play();
+                                    }
+                                } catch { }
                             }
-                            catch { }
 
                             frmAlerte fAlert2 = new frmAlerte(message);
                             _ = fAlert2.ShowDialog();
@@ -150,28 +150,28 @@ namespace NoPanic
         }
         private void Envoyer(string sIP, string sMessage)
         {
-            UdpClient client = null;
             try
             {
-                client = new UdpClient(new IPEndPoint(IPAddress.Parse(IP), Port_Envoi));
-                IPEndPoint mip = sIP.Contains(".")
-                    ? new IPEndPoint(IPAddress.Parse(sIP), Port_Ecoute)
-                    : new IPEndPoint(Dns.GetHostAddresses(sIP)[0], Port_Ecoute);
-                byte[] bytes = Encoding.ASCII.GetBytes("NOPANIC|" + sMessage + "|END");
-                _ = client.Send(bytes, bytes.Length, mip);
+                using (var client = new UdpClient())
+                {
+                    IPEndPoint mip = sIP.Contains(".")
+                        ? new IPEndPoint(IPAddress.Parse(sIP), Port_Ecoute)
+                        : new IPEndPoint(Dns.GetHostAddresses(sIP)[0], Port_Ecoute);
+                    byte[] bytes = Encoding.UTF8.GetBytes("NOPANIC|" + sMessage + "|END");
+                    client.Send(bytes, bytes.Length, mip);
+                }
             } 
             catch { Etat = 0; } 
-            finally { client.Close(); }
         }
 
         private void Envoyer_Presence(object source, ElapsedEventArgs e)
         {
-            if (Present < 3) { Present += 1; }
+            if (Present < 3) { Present++; }
             if (Present >= 2)
             {
                 foreach (string mIP in Properties.Settings.Default.TestPresence_IP.Split(','))
                 {
-                    Envoyer(mIP, "PRESENCE");
+                    Envoyer(mIP.Trim(), "PRESENCE");
                 }
             }
             if (Present == 3) { Etat = 0; }
@@ -198,7 +198,7 @@ namespace NoPanic
 
                 foreach (string mIP in Properties.Settings.Default.Alerte_IP.Split(','))
                 {
-                    Envoyer(mIP, Alerte_Message);
+                    Envoyer(mIP.Trim(), Alerte_Message);
                 }
                 LogAlerte("ENVOYE", Environment.MachineName, Alerte_Message);
 
@@ -226,8 +226,8 @@ namespace NoPanic
             try
             {
                 string dossier = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"NoPanic");
+                
                 Directory.CreateDirectory(dossier);
-
                 string fichier = Path.Combine(dossier, "alertes.log");
 
                 if (File.Exists(fichier))
@@ -246,6 +246,11 @@ namespace NoPanic
             } catch { }
         }
 
-        ~ClsNoPanic() { try { u?.Close(); } catch { } }
+        public void Dispose()
+        {
+            tTestPresence?.Stop();
+            tTestPresence?.Dispose();
+            u?.Close();
+        }
     }
 }
